@@ -2,6 +2,6 @@ BINARY		= miniblink
 SRCFILES	= miniblink.c
 
 
-all: elf bin
+all: libopencm3 elf bin
 
 include ../Makefile.incl
