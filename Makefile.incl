@@ -2,7 +2,6 @@ PREFIX		?= arm-none-eabi
 
 TOP_DIR		:= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 OPENCM3_DIR	:= $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/libopencm3)
-include $(TOP_DIR)/Makefile.opencm
 
 LIBNAME 	= opencm3_stm32f1
 DEFS		+= -DSTM32F1
@@ -62,6 +61,11 @@ LDLIBS		+= -specs=nosys.specs
 LDLIBS		+= -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 #LDLIBS		+= -L$(TOP_DIR)/rtos/libwwg -lwwg
 LDLIBS		+= -L$(OPENCM3_DIR)/lib -lopencm3_stm32f1
+
+libopencm3: libopencm3/lib/libopencm3_stm32f1.a
+
+libopencm3/lib/libopencm3_stm32f1.a:
+	$(MAKE) -C $(OPENCM3_DIR) TARGETS=stm32/f1
 
 
 .SUFFIXES:	.elf .bin .hex .srec .list .map .images
