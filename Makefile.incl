@@ -8,13 +8,12 @@ LIBNAME 	= opencm3_stm32f1
 DEFS		+= -DSTM32F1
 
 FP_FLAGS	?= -msoft-float
-#ARCH_FLAGS	= -mthumb -mcpu=cortex-m3
-ARCH_FLAGS  = -marmelf
+ARCH_FLAGS	= -mthumb -mcpu=cortex-m3 $(FP_FLAGS) -mfix-cortex-m3-ldrd
 ASFLAGS		= -mthumb -mcpu=cortex-m3
 
 CC			:= $(PREFIX)-gcc
 CXX			:= $(PREFIX)-g++
-LD			:= $(PREFIX)-ld
+LD			:= $(PREFIX)-gcc
 AR			:= $(PREFIX)-ar
 AS			:= $(PREFIX)-as
 OBJCOPY		:= $(PREFIX)-objcopy
@@ -53,7 +52,7 @@ TGT_CPPFLAGS	+= $(DEFS)
 TGT_CPPFLAGS	+= -I$(OPENCM3_DIR)/include
 #TGT_CPPFLAGS	+= -I$(TOP_DIR)/rtos/libwwg/include
 
-#TGT_LDFLAGS	+= --static --nostartfiles
+TGT_LDFLAGS	+= --static --nostartfiles
 TGT_LDFLAGS	+= -T$(LDSCRIPT)
 TGT_LDFLAGS	+= $(ARCH_FLAGS)
 TGT_LDFLAGS	+= -Wl,-Map=$(*).map
