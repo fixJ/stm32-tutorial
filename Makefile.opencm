@@ -1,1 +1,4 @@
+libopencm3: libopencm3/lib/libopencm3_stm32f1.a
 
+libopencm3/lib/libopencm3_stm32f1.a:
+	$(MAKE) -C $(OPENCM3_DIR) TARGETS=stm32/f1
