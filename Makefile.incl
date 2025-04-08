@@ -1,3 +1,6 @@
+include ./Makefile.opencm
+
+
 PREFIX		?= arm-none-eabi
 
 TOP_DIR		:= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -126,8 +129,6 @@ clean:
 
 clobber: clean
 	rm -f *.elf *.bin *.hex *.srec *.list *.map $(CLOBBER)
-
-include ./Makefile.opencm
 
 # Flash 64k Device
 flash:	$(BINARY).bin
