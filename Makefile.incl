@@ -127,6 +127,8 @@ clean:
 clobber: clean
 	rm -f *.elf *.bin *.hex *.srec *.list *.map $(CLOBBER)
 
+include ./Makefile.opencm
+
 # Flash 64k Device
 flash:	$(BINARY).bin
 	$(STFLASH) $(FLASHSIZE) write $(BINARY).bin 0x8000000
