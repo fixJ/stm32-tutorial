@@ -52,7 +52,7 @@ TGT_CPPFLAGS	+= $(DEFS)
 TGT_CPPFLAGS	+= -I$(OPENCM3_DIR)/include
 #TGT_CPPFLAGS	+= -I$(TOP_DIR)/rtos/libwwg/include
 
-TGT_LDFLAGS	+= --static --nostartfiles
+TGT_LDFLAGS	+= --static -nostartfiles
 TGT_LDFLAGS	+= -T$(LDSCRIPT)
 TGT_LDFLAGS	+= $(ARCH_FLAGS)
 TGT_LDFLAGS	+= -Wl,-Map=$(*).map
