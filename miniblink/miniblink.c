@@ -19,12 +19,12 @@ main(void) {
     gpio_setup();
 
     for (;;) {
-        gpio_clear(GPIOE,GPIO5);	/* LED on */
+        gpio_toggle(GPIOE, GPIO5);
         for (i = 0; i < 1500000; i++)	/* Wait a bit. */
             __asm__("nop");
 
-        gpio_set(GPIOE,GPIO5);		/* LED off */
-        for (i = 0; i < 500000; i++)	/* Wait a bit. */
+        gpio_toggle(GPIOE, GPIO5);
+        for (i = 0; i < 2000000; i++)	/* Wait a bit. */
             __asm__("nop");
     }
 
