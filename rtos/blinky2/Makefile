@@ -1,10 +1,10 @@
 BINARY		= main
-SRCFILES	= main.c opencm3.c /root/stm32-tutorial/FreeRTOS-kernelV11.2.0/tasks.c /root/stm32-tutorial/FreeRTOS-kernelV11.2.0/portable/GCC/ARM_CM3/port.c
+SRCFILES	= main.c opencm3.c rtos/tasks.c rtos/port.c
 LDSCRIPT	= stm32f103zet6.ld
 
 
-TGT_CFLAGS	    += -I../FreeRTOS-kernelV11.2.0/include -I../FreeRTOS-kernelV11.2.0/portable/GCC/ARM_CM3/ -I.
-TGT_CXXFLAGS	+= -I../FreeRTOS-kernelV11.2.0/include -I../FreeRTOS-kernelV11.2.0/portable/GCC/ARM_CM3/ -I.
+TGT_CFLAGS	    += -I../rtos -I.
+TGT_CXXFLAGS	+= -I../rtos -I.
 
 all: elf bin
 
