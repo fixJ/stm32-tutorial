@@ -10,3 +10,4 @@
 #define configCPU_CLOCK_HZ              ( ( unsigned long ) 72000000 )
 #define configSYSTICK_CLOCK_HZ          ( configCPU_CLOCK_HZ / 8 ) /* vTaskDelay() fix */
 #define INCLUDE_vTaskDelay      1
+#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 17 * 1024 ) )
