@@ -1,5 +1,5 @@
 BINARY		= main
-SRCFILES	= main.c rtos/heap_4.c rtos/port.c rtos/tasks.c rtos/opencm3.c
+SRCFILES	= main.c rtos/heap_4.c rtos/list.c rtos/port.c rtos/tasks.c rtos/opencm3.c
 LDSCRIPT	= stm32f103zet6.ld
 
 
