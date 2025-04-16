@@ -33,6 +33,7 @@ static void task1(void *args __attribute((unused))) {
             uart_putc(c);
             uart_putc('\r');
             uart_putc('\n');
+            c = '0' - 1;
         } else {
             uart_putc(c);
         }
