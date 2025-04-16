@@ -41,7 +41,7 @@ static void task1(void *args __attribute((unused))) {
 
 
 int main(void) {
-    rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ])
+    rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]);
     rcc_periph_clock_enable(RCC_GPIOE);
     gpio_set_mode(GPIOE, GPIO_MODE_OUTPUT_2_MHZ,GPIO_CNF_OUTPUT_PUSHPULL,GPIO5);
     uart_setup();
