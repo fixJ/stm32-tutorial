@@ -36,7 +36,7 @@ static void uart_task(void *args __attribute((unused))) {
             while(!usart_get_flag(USART1, USART_SR_TXE)){
                 taskYIELD();
             }
-            uart_send(USART1, ch);
+            usart_send(USART1, ch);
         }
         gpio_toggle(GPIOE, GPIO5);
     }
