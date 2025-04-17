@@ -13,11 +13,7 @@ static void receive_task(void *args __attribute__((unused))) {
     for (;;) {
       ch = usb_getc();
       if (ch == '1') {
-          time_t currentTime;
-          char * c_current_time;
-          time(&currentTime);
-          c_current_time = ctime(&currentTime);
-          usb_write(c_current_time, strlen(c_current_time));
+          usb_write("hello", 5);
       } else {
         usb_write("error", 5);
       }
