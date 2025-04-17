@@ -323,3 +323,7 @@ void usb_start(void) {
   usbd_register_set_config_callback(udev, cdcacm_set_config);
   xTaskCreate(usb_task, "usb_task", 200, udev, configMAX_PRIORITIES-1, NULL);
 }
+
+bool usb_ready(void) {
+  return initialized;
+}
