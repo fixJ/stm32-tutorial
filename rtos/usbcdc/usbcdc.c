@@ -246,7 +246,7 @@ usb_task(void *args) {
   for(;;) {
     usbd_poll(udev);
     if (initialized) {
-      while(txlen < sizeof(txbuf) && xQueueReceive(usb_txq, &txbuf[txlen], 0) == pdPASS) {
+      while(txlen < sizeof(txbuf) && xQueueReceive(usb_txq, &txbuf[txlen], portMAX_DELAY) == pdPASS) {
         ++txlen;
       }
       if (txlen > 0) {
