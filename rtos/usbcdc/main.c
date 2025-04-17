@@ -22,7 +22,7 @@ static void receive_task(void *args __attribute__((unused))) {
 
 static void led_task(void *args __attribute__((unused))) {
   for(;;) {
-      gpio_toggle(GPIOE);
+      gpio_toggle(GPIOE, GPIO5);
       vTaskDelay(pdMS_TO_TICKS(2000));
   }
 }
