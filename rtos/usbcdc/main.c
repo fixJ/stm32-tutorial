@@ -29,6 +29,7 @@ int main(void) {
     rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]);
     usb_start();
     xTaskCreate(receive_task, "receive", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
+    vTaskStartScheduler();
     for(;;);
     return 0;
 }
