@@ -309,7 +309,7 @@ w25_spi_setup(
 		gpio_set(GPIOB,GPIO12);			// Set high
 	}
 
-	spi_reset(spi);
+	rcc_periph_reset_pulse(spi);
 
 	spi_init_master(
 		spi,

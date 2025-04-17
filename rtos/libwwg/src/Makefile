@@ -9,6 +9,9 @@ TEMP1 		= $(patsubst %.c,%.o,$(SRCFILES))
 TEMP2		= $(patsubst %.asm,%.o,$(TEMP1))
 OBJS 		= $(patsubst %.cpp,%.o,$(TEMP2))
 
+TGT_CFLAGS	    += -I./rtos -I.
+TGT_CXXFLAGS	+= -I./rtos -I.
+
 ../libwwg.a: $(OBJS)
 	@rm -f ../libwwg.a
 	$(AR) rv ../libwwg.a $(OBJS)
