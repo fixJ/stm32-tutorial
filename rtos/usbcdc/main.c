@@ -1,33 +1,34 @@
 #include "FreeRTOS.h"
 #include "task.h"
+#include "usbcdc.h"
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
+#include <time.h>
+#include <string.h>
+#include <stdio.h>
 
 
-void vApplicationStackOverflowHook( TaskHandle_t xTask __attribute((unused)), char * pcTaskName __attribute((unused))) {
-    for(;;);
-}
-
-static void task1(void *args __attribute((unused))) {
-    gpio_set(GPIOE, GPIO5);
-    gpio_clear(GPIOB, GPIO5);
-    for(;;){
-      gpio_toggle(GPIOB, GPIO5);
-      gpio_toggle(GPIOE, GPIO5);
-      vTaskDelay(pdMS_TO_TICKS(1000));
+static void receive_task(void *args __attribute__((unused))) {
+    char ch;
+    for (;;) {
+      ch = usb_getc();
+      if (ch == '1') {
+          time_t currentTime;
+          char * c_current_time;
+          time(&currentTime);
+          c_current_time = ctime(&currentTime);
+          usb_write(c_current_time, strlen(c_current_time));
+      } else {
+        usb_write("error", 5);
+      }
     }
 }
 
+
 int main(void) {
     rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]);
-    rcc_periph_clock_enable(RCC_GPIOB);
-    rcc_periph_clock_enable(RCC_GPIOE);
-    gpio_set_mode(GPIOB,GPIO_MODE_OUTPUT_2_MHZ,
-              GPIO_CNF_OUTPUT_PUSHPULL,GPIO5);
-    gpio_set_mode(GPIOE,GPIO_MODE_OUTPUT_2_MHZ,
-              GPIO_CNF_OUTPUT_PUSHPULL,GPIO5);
-    xTaskCreate(task1, "led", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
-    vTaskStartScheduler();
+    usb_start();
+    xTaskCreate(receive_task, "receive", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
     for(;;);
     return 0;
 }
