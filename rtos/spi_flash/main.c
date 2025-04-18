@@ -56,7 +56,7 @@ int main(void) {
     usb_start();
     led_setup();
     spi_setup();
-    xTaskCreate(send_task, "send", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(send_task, "send", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-2, NULL);
     xTaskCreate(led_task, "led", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
     vTaskStartScheduler();
     for(;;);
