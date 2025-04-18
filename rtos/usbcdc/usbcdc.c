@@ -71,7 +71,7 @@ static const struct {
   struct usb_cdc_call_management_descriptor call_mgmt;
   struct usb_cdc_acm_descriptor acm;
   struct usb_cdc_union_descriptor cdc_union;
-} __attribute__((__packed__)) cdcacm_functional_descriptors = {
+} __attribute__((packed)) cdcacm_functional_descriptors = {
     .header = {
         .bFunctionLength = sizeof(struct usb_cdc_header_descriptor),
         .bDescriptorType = CS_INTERFACE,
@@ -245,7 +245,7 @@ usb_task(void *args) {
   for(;;) {
     usbd_poll(udev);
     if (initialized) {
-      while(txlen < sizeof(txbuf) && xQueueReceive(usb_txq, &txbuf[txlen], portMAX_DELAY) == pdPASS) {
+      while(txlen < sizeof(txbuf) && xQueueReceive(usb_txq, &txbuf[txlen], 0) == pdPASS) {
         ++txlen;
       }
       if (txlen > 0) {
