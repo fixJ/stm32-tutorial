@@ -26,17 +26,18 @@ static void send_task(void *args __attribute__((unused))) {
     for(;;) {
       ch = usb_getc();
       if (ch == '1') {
-          usb_puts("abc");
+          w25_power(SPI2,1);
+          info = w25_manuf_device(SPI2);
+          devx = (int)(info & 0xff)-0x14;
+          if(0<=devx<4) {
+              device = cap[devx];
+          } else{
+              device = "Unknown";
+          }
+          usb_puts(device);
       }
     }
-//    w25_power(SPI2,1);
-//    info = w25_manuf_device(SPI2);
-//    devx = (int)(info & 0xff)-0x14;
-//    if(0<=devx<4) {
-//        device = cap[devx];
-//    } else{
-//        device = "Unknown";
-//    }
+
     for (;;);
 }
 
@@ -59,7 +60,7 @@ int main(void) {
     usb_start();
     led_setup();
     spi_setup();
-    xTaskCreate(send_task, "send", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-2, NULL);
+    xTaskCreate(send_task, "send", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(led_task, "led", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
     vTaskStartScheduler();
     for(;;);
