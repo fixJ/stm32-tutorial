@@ -1,6 +1,7 @@
 #include "spi_flash.h"
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "usbcdc.h"
@@ -32,7 +33,7 @@ uint8_t w25_read_sr2(uint32_t spi) {
 
 void w25_wait(uint32_t spi) {
   while(w25_read_sr1(spi) & W25_SR1_BUSY) {
-    TaskTIELD();
+    taskTIELD();
   }
 }
 
@@ -100,7 +101,7 @@ void w25_power(uint32_t spi, bool on) {
     w25_wait(spi);
   }
   spi_enable(spi);
-  spi_xfer(spi, on?W25_CMD_POWER_ON:W25_CMD_POWER_OFF);
+  spi_xfer(spi, on?W25_CMD_PWR_ON:W25_CMD_PWR_OFF);
   spi_disable(spi);
 }
 
@@ -110,7 +111,7 @@ bool w25_chip_erase(uint32_t spi) {
     return false;
   }
   spi_enable(spi);
-  spi_xfer(spi, W25_CMD_CHIP_ERASE);
+  spi_xfer(spi, W25_CMD_CHIP_EASE);
   spi_disable(spi);
   usb_puts("Chip erasing.\n");
   if (!w25_is_wprotect(spi)) {
@@ -179,7 +180,7 @@ void w25_erase_block(uint32_t spi, uint32_t addr, uint32_t cmd) {
 void spi_setup(void) {
   rcc_periph_clock_enable(RCC_SPI2);
   gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO12|GPIO13|GPIO15);
-  gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_IN_FLOAT, GPIO14);
+  gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO14);
   rcc_periph_reset_pulse(RCC_SPI2);
   spi_init_master(
       SPI2,
