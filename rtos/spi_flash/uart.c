@@ -40,6 +40,5 @@ void uart_task(void *args __attribute((unused))) {
             }
             usart_send(USART1, ch);
         }
-        gpio_toggle(GPIOE, GPIO5);
     }
 }

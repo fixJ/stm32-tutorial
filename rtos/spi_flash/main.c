@@ -10,7 +10,7 @@
 #include "uart.h"
 
 
-static char *cap[3] = {
+static char *cap[4] = {
     "W25X16",
     "W25X32",
     "W25X64"
