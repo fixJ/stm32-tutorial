@@ -1,6 +1,5 @@
 #include "FreeRTOS.h"
 #include "task.h"
-#include "usbcdc.h"
 #include "spi_flash.h"
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
