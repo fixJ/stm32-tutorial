@@ -11,7 +11,7 @@
 #include "uart.h"
 
 
-static const char *cap[3] = {
+static char *cap[3] = {
     "W25X16",
     "W25X32",
     "W25X64"
@@ -21,7 +21,7 @@ static const char *cap[3] = {
 static void send_task(void *args __attribute__((unused))) {
     char ch;
     int devx;
-    const char * device;
+    char * device;
     uint32_t info;
     for (;;) {
         info = w25_manuf_device(SPI2);

@@ -43,17 +43,3 @@ void uart_task(void *args __attribute((unused))) {
         gpio_toggle(GPIOE, GPIO5);
     }
 }
-
-
-
-int main(void) {
-    rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]);
-    rcc_periph_clock_enable(RCC_GPIOE);
-    gpio_set_mode(GPIOE, GPIO_MODE_OUTPUT_2_MHZ,GPIO_CNF_OUTPUT_PUSHPULL,GPIO5);
-    uart_setup();
-    xTaskCreate(uart_task,"uart_task",100,NULL,configMAX_PRIORITIES-1,NULL);
-    xTaskCreate(demo_task,"demo_task",100,NULL,configMAX_PRIORITIES-2,NULL);
-    vTaskStartScheduler();
-    for(;;);
-    return 0;
-}
