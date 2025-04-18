@@ -22,14 +22,18 @@ static void send_task(void *args __attribute__((unused))) {
     int devx;
     char * devs;
     char * device;
-    uint8_t sr;
+    uint16_t info;
+    char str[5];
     w25_power(SPI2,1);
     for(;;) {
       ch = usb_getc();
       if (ch == '1') {
-          sr = w25_read_sr1(SPI2);
-          char str[4]; // Enough space for "AB" and null terminator
-          sprintf(str, "%02X", sr); // Convert to hexadecimal string
+          info = w25_manuf_device(SPI2);
+          str[0] = "0123456789ABCDEF"[(info >> 12) & 0x0F];
+          str[1] = "0123456789ABCDEF"[(info >> 8) & 0x0F];
+          str[2] = "0123456789ABCDEF"[(info >> 4) & 0x0F];
+          str[3] = "0123456789ABCDEF"[info & 0x0F];
+          str[4] = '\0';
           usb_puts(str);
       }
     }
