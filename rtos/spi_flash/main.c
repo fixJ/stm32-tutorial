@@ -8,7 +8,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "uart.h"
-#include <stdlib.h>
 
 
 static char *cap[4] = {
@@ -28,7 +27,7 @@ static void send_task(void *args __attribute__((unused))) {
         info = w25_manuf_device(SPI2);
         devx = (int)(info & 0xff)-0x14;
         if(devx<4) {
-            itoa(devx, devs, 10);
+            snprintf(devs, sizeof(devs), "%d", devx);
             uart_puts(devs);
             device = cap[devx];
         } else{
