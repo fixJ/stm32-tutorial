@@ -5,6 +5,6 @@
 #ifndef UART_H
 #define UART_H
 void uart_setup(void);
-inline void uart_puts(char * s);
+void uart_puts(char * s);
 void uart_task(void *args __attribute((unused)));
 #endif //UART_H

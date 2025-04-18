@@ -24,7 +24,7 @@ void uart_setup(void) {
 }
 
 
-inline void uart_puts(char * s) {
+void uart_puts(char * s) {
     for (;*s;++s) {
         xQueueSend(uart_txq, s, portMAX_DELAY);
     }
