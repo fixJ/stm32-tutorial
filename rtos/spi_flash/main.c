@@ -23,16 +23,20 @@ static void send_task(void *args __attribute__((unused))) {
     char * devs;
     char * device;
     uint32_t info;
-    w25_power(SPI2,1);
-    info = w25_manuf_device(SPI2);
-    devx = (int)(info & 0xff)-0x14;
-    if(0<=devx<4) {
-        device = cap[devx];
-    } else{
-        device = "Unknown";
+    for(;;) {
+      ch = usb_getc();
+      if (ch == '1') {
+          usb_puts("abc");
+      }
     }
-    usb_puts(device);
-    vTaskDelay(pdMS_TO_TICKS(1000));
+//    w25_power(SPI2,1);
+//    info = w25_manuf_device(SPI2);
+//    devx = (int)(info & 0xff)-0x14;
+//    if(0<=devx<4) {
+//        device = cap[devx];
+//    } else{
+//        device = "Unknown";
+//    }
     for (;;);
 }
 
