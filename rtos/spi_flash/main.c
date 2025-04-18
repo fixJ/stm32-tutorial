@@ -22,22 +22,17 @@ static void send_task(void *args __attribute__((unused))) {
     int devx;
     char * devs;
     char * device;
-    uint32_t info;
+    uint8_t sr;
+    w25_power(SPI2,1);
     for(;;) {
       ch = usb_getc();
       if (ch == '1') {
-          w25_power(SPI2,1);
-          info = w25_manuf_device(SPI2);
-          devx = (int)(info & 0xff)-0x14;
-          if(0<=devx<4) {
-              device = cap[devx];
-          } else{
-              device = "Unknown";
-          }
-          usb_puts(device);
+          sr = w25_read_sr1(SPI2);
+          char str[4]; // Enough space for "AB" and null terminator
+          sprintf(str, "%02X", sr); // Convert to hexadecimal string
+          usb_puts(str);
       }
     }
-
     for (;;);
 }
 
