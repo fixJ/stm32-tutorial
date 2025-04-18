@@ -20,7 +20,7 @@ static char *cap[4] = {
 static void send_task(void *args __attribute__((unused))) {
     char ch;
     int devx;
-    char devs[100];
+    char * devs;
     char * device;
     uint32_t info;
     for (;;) {

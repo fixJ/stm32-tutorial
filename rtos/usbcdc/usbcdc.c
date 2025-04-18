@@ -316,8 +316,8 @@ void usb_start(void) {
   usbd_device * udev = 0;
   usb_txq = xQueueCreate(128, sizeof(char));
   usb_rxq = xQueueCreate(128, sizeof(char));
-  rcc_periph_clock_enable(RCC_USB);
   rcc_periph_clock_enable(RCC_GPIOA);
+  rcc_periph_clock_enable(RCC_USB);
   udev = usbd_init(&st_usbfs_v1_usb_driver, &dev, &config, usb_strings, 3, usbd_control_buffer, sizeof(usbd_control_buffer));
   usbd_register_set_config_callback(udev, cdcacm_set_config);
   xTaskCreate(usb_task, "usb_task", 200, udev, configMAX_PRIORITIES-1, NULL);
