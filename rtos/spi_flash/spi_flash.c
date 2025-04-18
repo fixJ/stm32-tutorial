@@ -33,7 +33,7 @@ uint8_t w25_read_sr2(uint32_t spi) {
 
 void w25_wait(uint32_t spi) {
   while(w25_read_sr1(spi) & W25_SR1_BUSY) {
-    taskTIELD();
+    taskYIELD();
   }
 }
 
