@@ -26,7 +26,7 @@ uint8_t w25_read_sr2(uint32_t spi) {
     uint8_t sr2;
     spi_enable(spi);
     spi_xfer(spi, W25_CMD_READ_SR2);
-    sr1 = spi_xfer(spi, DUMMY);
+    sr2 = spi_xfer(spi, DUMMY);
     spi_disable(spi);
     return sr2;
 }
