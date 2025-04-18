@@ -7,7 +7,6 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
-#include <libopencm3/cm3/scb.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
