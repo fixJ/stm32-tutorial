@@ -21,7 +21,7 @@ static void receive_task(void *args __attribute__((unused))) {
     char ch;
     int devx;
     const char * device;
-    const uint16_t info;
+    uint32_t info;
     for (;;) {
         ch = usb_getc();
         if (ch == '1') {
