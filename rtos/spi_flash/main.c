@@ -24,17 +24,16 @@ static void send_task(void *args __attribute__((unused))) {
     char * device;
     uint32_t info;
     w25_power(SPI2,1);
-    for (;;) {
-        info = w25_manuf_device(SPI2);
-        devx = (int)(info & 0xff)-0x14;
-        if(0<=devx<4) {
-            device = cap[devx];
-        } else{
-            device = "Unknown";
-        }
-        usb_puts(device);
-        vTaskDelay(pdMS_TO_TICKS(1000));
+    info = w25_manuf_device(SPI2);
+    devx = (int)(info & 0xff)-0x14;
+    if(0<=devx<4) {
+        device = cap[devx];
+    } else{
+        device = "Unknown";
     }
+    usb_puts(device);
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    for (;;);
 }
 
 static void led_task(void *args __attribute__((unused))) {
