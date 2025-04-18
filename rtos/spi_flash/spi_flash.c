@@ -179,6 +179,7 @@ void w25_erase_block(uint32_t spi, uint32_t addr, uint32_t cmd) {
 
 void spi_setup(void) {
   rcc_periph_clock_enable(RCC_SPI2);
+  rcc_periph_clock_enable(GPIOB);
   gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO12|GPIO13|GPIO15);
   gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO14);
   rcc_periph_reset_pulse(RCC_SPI2);
