@@ -26,7 +26,7 @@ static void send_task(void *args __attribute__((unused))) {
     for (;;) {
         info = w25_manuf_device(SPI2);
         devx = (int)(info & 0xff)-0x14;
-        if(devx<4) {
+        if(0<=devx<4) {
             device = cap[devx];
         } else{
             device = "Unknown";
