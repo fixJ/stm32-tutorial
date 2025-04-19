@@ -13,11 +13,21 @@ static const char *cap[3] = {
     "W25X128"
 };
 
+static void spi_nss_enable(void) {
+  gpio_clear(GPIOB, GPIO12);
+}
+
+static void spi_nss_disable(void) {
+  gpio_set(GPIOB, GPIO12);
+}
+
 uint8_t w25_read_sr1(uint32_t spi) {
     uint8_t sr1;
     spi_enable(spi);
+    spi_nss_enable();
     spi_xfer(spi, W25_CMD_READ_SR1);
     sr1 = spi_xfer(spi, DUMMY);
+    spi_nss_disable();
     spi_disable(spi);
     return sr1;
 }
@@ -54,12 +64,14 @@ uint16_t w25_manuf_device(uint32_t spi) {
   uint16_t info;
   w25_wait(spi);
   spi_enable(spi);
+  spi_nss_enable();
   spi_xfer(spi, W25_CMD_MANUF_DEVICE);
   spi_xfer(spi, DUMMY);
   spi_xfer(spi, DUMMY);
   spi_xfer(spi, DUMMY);
   info = spi_xfer(spi, DUMMY) << 8;
   info |= spi_xfer(spi, DUMMY);
+  spi_nss_disable();
   spi_disable(spi);
   return info;
 }
@@ -176,11 +188,12 @@ void w25_erase_block(uint32_t spi, uint32_t addr, uint32_t cmd) {
   }
 }
 
-
+//PB12-SS PB13-SCK PB14-MISO PB15-MOSI
 void spi_setup(void) {
   rcc_periph_clock_enable(RCC_SPI2);
   rcc_periph_clock_enable(RCC_GPIOB);
-  gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO12|GPIO13|GPIO15);
+  gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO13|GPIO15);
+  gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO12);
   gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO14);
   rcc_periph_reset_pulse(RST_SPI2);
   spi_init_master(
@@ -191,6 +204,4 @@ void spi_setup(void) {
       SPI_CR1_DFF_8BIT,
       SPI_CR1_MSBFIRST
   );
-  spi_disable_software_slave_management(SPI2);
-  spi_enable_ss_output(SPI2);
 }
