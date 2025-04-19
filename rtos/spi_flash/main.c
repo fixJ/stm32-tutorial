@@ -29,12 +29,18 @@ static void send_task(void *args __attribute__((unused))) {
       ch = usb_getc();
       if (ch == '1') {
           info = w25_manuf_device(SPI2);
-          str[0] = "0123456789ABCDEF"[(info >> 12) & 0x0F];
-          str[1] = "0123456789ABCDEF"[(info >> 8) & 0x0F];
-          str[2] = "0123456789ABCDEF"[(info >> 4) & 0x0F];
-          str[3] = "0123456789ABCDEF"[info & 0x0F];
-          str[4] = '\0';
-          usb_puts(str);
+          devx = (int)(info & 0xFF)-0x14;
+          if ( devx < 4 ){
+              device = cap[devx];
+          } else{
+              device = "unknown";
+          }
+//          str[0] = "0123456789ABCDEF"[(info >> 12) & 0x0F];
+//          str[1] = "0123456789ABCDEF"[(info >> 8) & 0x0F];
+//          str[2] = "0123456789ABCDEF"[(info >> 4) & 0x0F];
+//          str[3] = "0123456789ABCDEF"[info & 0x0F];
+//          str[4] = '\0';
+          usb_puts(device);
       }
     }
     for (;;);
