@@ -22,25 +22,41 @@ static void send_task(void *args __attribute__((unused))) {
     int devx;
     char * devs;
     char * device;
-    uint16_t info;
+    uint32_t info;
     char str[5];
-    w25_power(SPI2,1);
     for(;;) {
       ch = usb_getc();
-      if (ch == '1') {
-          info = w25_manuf_device(SPI2);
-          devx = (int)(info & 0xFF)-0x14;
-          if ( devx < 4 ){
-              device = cap[devx];
-          } else{
-              device = "unknown";
-          }
-//          str[0] = "0123456789ABCDEF"[(info >> 12) & 0x0F];
-//          str[1] = "0123456789ABCDEF"[(info >> 8) & 0x0F];
-//          str[2] = "0123456789ABCDEF"[(info >> 4) & 0x0F];
-//          str[3] = "0123456789ABCDEF"[info & 0x0F];
-//          str[4] = '\0';
-          usb_puts(device);
+      switch (ch) {
+        case '0':
+            w25_power(SPI2,0);
+            usb_puts("w25q128 already poweroff\n");
+            break;
+        case '1':
+            w25_power(SPI2,1);
+            usb_puts("w25q128 already poweron\n");
+            break;
+        case 'I':
+            info = w25_manuf_device(SPI2);
+            devx = (int)(info & 0xFF)-0x14;
+            if ( devx < 4 ){
+                device = cap[devx];
+            } else{
+                device = "unknown";
+            }
+            usb_puts(device);
+            break;
+        case 'J':
+              info = w25_JEDEC_ID(SPI2);
+              devx = (int)(info & 0xFF)-0x15;	// Offset is 1 higher here
+              if ( devx < 4 )
+                  device = cap[devx];
+              else	device = "unknown";
+              usb_printf("Manufacturer $%02X Type $%02X Capacity $%02X (%s)\n",
+                  (uint16_t)(info>>16),
+                  (uint16_t)((info>>8)&0xFF),
+                  (uint16_t)(info&0xFF),
+                  device);
+              break;
       }
     }
     for (;;);
