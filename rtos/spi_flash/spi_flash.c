@@ -5,6 +5,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "usbcdc.h"
+#include <ctype.h>
 
 static const char *cap[3] = {
     "W25X16",
@@ -187,11 +188,11 @@ unsigned w25_write_data(uint32_t spi, uint32_t addr, void * data, uint32_t len){
         break;
       }
     }
+    spi_nss_disable();
+    spi_disable(spi);
     if (len>0) {
       w25_write_en(spi, true);
     }
-    spi_nss_disable();
-    spi_disable(spi);
   }
   return addr;
 }
@@ -235,6 +236,94 @@ void flash_status(void) {
   s = w25_read_sr1(SPI2);
   usb_printf("SR1 = %02x (%s)\n", s, s & W25_SR1_WEL ? "write enabled" : "write disabled");
   usb_printf("SR2 = %02x\n", w25_read_sr2(SPI2));
+}
+
+unsigned int get_data24(const char * prompt) {
+	unsigned int v = 0u, count = 0u;
+    char ch;
+    if (prompt) {
+      usb_printf("%s", prompt);
+    }
+    while ((ch = usb_getc()) != '\r' && ch != '\n') {
+      if (ch == '\b' || ch == 0x7f) {
+        v >>= 4;
+        usb_puts("\b \b");
+        if (count > 0 ) {
+          --count;
+        }
+        continue;
+      }
+      if (ch >= '0' && ch <= '9') {
+        v <<= 4
+        v |= ch & 0x0F;
+        usb_putc(ch);
+      } else {
+        if (isalpha(ch)) {
+			ch = toupper(ch);
+        }
+        if (ch >= 'A' && ch <= 'Z') {
+        	v <<= 4;
+            v |= ((ch & 0x0F) - 1 + 10);
+            usb_putc(ch);
+        } else {
+          usb_puts("??");
+          continue;
+        }
+      }
+      if (++count > 6) {
+        break;
+      }
+    }
+	return v & 0xFFFFFF;
+}
+
+unsigned int get_data8(const char * prompt) {
+	unsigned int v = 0u, count = 0u;
+    char ch;
+    if (prompt) {
+      usb_printf("%s", prompt);
+    }
+    while ((ch = usb_getc()) != '\r' && ch != '\n' && strchr(",./;\t", ch)) {
+      if (ch == '"' || ch == '\'') {
+        usb_putc(ch);
+        v = usb_getc();
+        usb_putc(v);
+        count = 1;
+        break;
+      }
+      if (ch == '\b' || ch == 0x7f) {
+        v >>= 4;
+        usb_puts("\b \b");
+        if (count > 0 ) {
+          --count;
+        }
+        continue;
+      }
+      if (ch >= '0' && ch <= '9') {
+        v <<= 4
+        v |= ch & 0x0F;
+        usb_putc(ch);
+      } else {
+        if (isalpha(ch)) {
+			ch = toupper(ch);
+        }
+        if (ch >= 'A' && ch <= 'Z') {
+        	v <<= 4;
+            v |= ((ch & 0x0F) - 1 + 10);
+            usb_putc(ch);
+        } else {
+          usb_puts("??");
+          continue;
+        }
+      }
+      if (++count > 2) {
+        break;
+      }
+    }
+    if (!count) {
+      return 0xffff;
+    }
+	return v & 0xFF;
 }
 
 //PB12-SS PB13-SCK PB14-MISO PB15-MOSI

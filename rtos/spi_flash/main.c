@@ -8,6 +8,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 
 static char *cap[4] = {
@@ -19,15 +20,20 @@ static char *cap[4] = {
 
 static void send_task(void *args __attribute__((unused))) {
     char ch;
-    uint8_t read_buf;
+    uint8_t read_buf, write_buf;
     int devx;
     uint8_t idbuf[8];
     char * devs;
     char * device;
     uint32_t info;
     char str[5];
+    unsigned int addr;
     for(;;) {
       ch = usb_getc();
+      if (isalpha(ch)) {
+        ch = toupper(ch);
+      }
+      usb_printf("%c\n", ch);
       switch (ch) {
         case '0':
             w25_power(SPI2,0);
@@ -74,16 +80,36 @@ static void send_task(void *args __attribute__((unused))) {
               w25_write_en(SPI2, true);
               break;
         case 'A':
-              w25_write_data(SPI2, 0, "gjx", 3);
-              usb_printf("data write done\n");
+              addr = get_data24("Address");
+              usb_printf("Address $%06X\n", addr);
               break;
         case 'R':
-              w25_read_data(SPI2, 0, (char *)&read_buf, 3);
-              usb_printf("read data is : %d\n", read_buf);
+              w25_read_data(SPI2, addr, (char *)&read_buf, 1);
+              usb_printf("$%06x %02x\n", addr, read_buf);
+              if (read_buf >= ' ' && read_buf <= 0x7f) {
+                usb_printf("'%c'\n", read_buf);
+              } else {
+                usb_puts("'%c'\n");
+              }
               break;
+        case 'P':
+              unsigned a;
+              uint16_t d, count = 0u;
+              usb_printf("$06x ", addr);
+              while ((d = get_data8(0)) != 0xffff) {
+                usb_putc(' ');
+                write_buf = d & 0xff;
+                a = w25_write_data(SPI2, addr, &write_buf, 1);
+                if (a == 0xffffffff) {
+                  break;
+                }
+                addr = a;
+                ++count;
+              }
         case 'E':
               w25_chip_erase(SPI2);
               usb_printf("chip erase done\n");
+              break;
       }
     }
     for (;;);
