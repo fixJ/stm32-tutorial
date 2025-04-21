@@ -69,6 +69,8 @@ static void send_task(void *args __attribute__((unused))) {
         case 'S':
               flash_status();
               break;
+        case 'W':
+              w25_write_en(SPI2, true);
       }
     }
     for (;;);
