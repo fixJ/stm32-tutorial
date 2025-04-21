@@ -79,7 +79,7 @@ static void send_task(void *args __attribute__((unused))) {
               break;
         case 'R':
               w25_read_data(SPI2, 0, (char *)&read_buf, 3);
-              usb_printf("read data is : %s\n", read_buf);
+              usb_printf("read data is : %d\n", read_buf);
               break;
         case 'E':
               w25_chip_erase(SPI2);
