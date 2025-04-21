@@ -66,6 +66,9 @@ static void send_task(void *args __attribute__((unused))) {
               }
               usb_puts("\n");
               break;
+        case 'S':
+              flash_status();
+              break;
       }
     }
     for (;;);
