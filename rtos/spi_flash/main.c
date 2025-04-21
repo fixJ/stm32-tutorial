@@ -89,13 +89,13 @@ static void send_task(void *args __attribute__((unused))) {
               if (read_buf >= ' ' && read_buf <= 0x7f) {
                 usb_printf("'%c'\n", read_buf);
               } else {
-                usb_puts("'%c'\n");
+                usb_puts("\n");
               }
               break;
         case 'P':
               unsigned a;
               uint16_t d, count = 0u;
-              usb_printf("$06x ", addr);
+              usb_printf("$%06X ", addr);
               while ((d = get_data8(0)) != 0xffff) {
                 usb_putc(' ');
                 write_buf = d & 0xff;
