@@ -106,6 +106,7 @@ static void send_task(void *args __attribute__((unused))) {
                 addr = a;
                 ++count;
               }
+              break;
         case 'E':
               w25_chip_erase(SPI2);
               usb_printf("chip erase done\n");
