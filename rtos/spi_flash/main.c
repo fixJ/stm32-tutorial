@@ -19,7 +19,7 @@ static char *cap[4] = {
 
 static void send_task(void *args __attribute__((unused))) {
     char ch;
-    char * read_buf;
+    uint8_t read_buf;
     int devx;
     uint8_t idbuf[8];
     char * devs;
@@ -78,7 +78,7 @@ static void send_task(void *args __attribute__((unused))) {
               usb_printf("data write done\n");
               break;
         case 'R':
-              w25_read_data(SPI2, 0, read_buf, 3);
+              w25_read_data(SPI2, 0, (char *)&read_buf, 3);
               usb_printf("read data is : %s\n", read_buf);
               break;
         case 'E':
