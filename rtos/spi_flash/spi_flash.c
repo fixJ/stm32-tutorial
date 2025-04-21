@@ -7,13 +7,6 @@
 #include "usbcdc.h"
 #include <ctype.h>
 
-static const char *cap[3] = {
-    "W25X16",
-    "W25X32",
-    "W25X64"
-    "W25X128"
-};
-
 static void spi_nss_enable(void) {
   gpio_clear(GPIOB, GPIO12);
 }
@@ -254,7 +247,7 @@ unsigned int get_data24(const char * prompt) {
         continue;
       }
       if (ch >= '0' && ch <= '9') {
-        v <<= 4
+        v <<= 4;
         v |= ch & 0x0F;
         usb_putc(ch);
       } else {
@@ -300,7 +293,7 @@ unsigned int get_data8(const char * prompt) {
         continue;
       }
       if (ch >= '0' && ch <= '9') {
-        v <<= 4
+        v <<= 4;
         v |= ch & 0x0F;
         usb_putc(ch);
       } else {
