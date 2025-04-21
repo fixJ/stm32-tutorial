@@ -57,7 +57,9 @@ bool w25_is_wprotect(uint32_t spi) {
 void w25_write_en(uint32_t spi, bool en) {
   w25_wait(spi);
   spi_enable(spi);
+  spi_nss_enable();
   spi_xfer(spi, en?W25_CMD_WRITE_EN:W25_CMD_WRITE_DI);
+  spi_nss_disable();
   spi_disable(spi);
   w25_wait(spi);
 }
@@ -102,6 +104,7 @@ void w25_read_uid(uint32_t spi, void *buf, uint16_t bytes) {
 
   w25_wait(spi);
   spi_enable(spi);
+  spi_nss_enable();
   spi_xfer(spi, W25_CMD_READ_UID);
   for(uint8_t ux=0; ux<4; ux++) {
     spi_xfer(spi, DUMMY);
@@ -109,6 +112,7 @@ void w25_read_uid(uint32_t spi, void *buf, uint16_t bytes) {
   for (uint8_t ux=0; ux<bytes; ux++) {
     udata[ux] = spi_xfer(spi, DUMMY);
   }
+  spi_nss_disable();
   spi_disable(spi);
 }
 
@@ -117,7 +121,9 @@ void w25_power(uint32_t spi, bool on) {
     w25_wait(spi);
   }
   spi_enable(spi);
+  spi_nss_enable();
   spi_xfer(spi, on?W25_CMD_PWR_ON:W25_CMD_PWR_OFF);
+  spi_nss_disable();
   spi_disable(spi);
 }
 
@@ -127,7 +133,9 @@ bool w25_chip_erase(uint32_t spi) {
     return false;
   }
   spi_enable(spi);
+  spi_nss_enable();
   spi_xfer(spi, W25_CMD_CHIP_EASE);
+  spi_nss_disable();
   spi_disable(spi);
   usb_puts("Chip erasing.\n");
   if (!w25_is_wprotect(spi)) {
@@ -143,6 +151,7 @@ uint32_t w25_read_data(uint32_t spi, uint32_t addr, void * data, uint32_t len){
   uint8_t *udata = (uint8_t *) data;
   w25_wait(spi);
   spi_enable(spi);
+  spi_nss_enable();
   spi_xfer(spi, W25_CMD_FAST_READ);
   spi_xfer(spi, addr>>16);
   spi_xfer(spi, (addr>>8)&0xFF);
@@ -151,6 +160,7 @@ uint32_t w25_read_data(uint32_t spi, uint32_t addr, void * data, uint32_t len){
   for(; len-->0; ++addr) {
     *udata++ = spi_xfer(spi, DUMMY);
   }
+  spi_nss_disable();
   spi_disable(spi);
   return addr;
 }
@@ -165,6 +175,7 @@ unsigned w25_write_data(uint32_t spi, uint32_t addr, void * data, uint32_t len){
   }
   while(len>0) {
     spi_enable(spi);
+    spi_nss_enable();
     spi_xfer(spi, W25_CMD_WRITE_DATA);
     spi_xfer(spi, addr>>16);
     spi_xfer(spi, (addr>>8)&0xFF);
@@ -176,10 +187,11 @@ unsigned w25_write_data(uint32_t spi, uint32_t addr, void * data, uint32_t len){
         break;
       }
     }
-    spi_disable(spi);
     if (len>0) {
       w25_write_en(spi, true);
     }
+    spi_nss_disable();
+    spi_disable(spi);
   }
   return addr;
 }
@@ -190,6 +202,39 @@ void w25_erase_block(uint32_t spi, uint32_t addr, uint32_t cmd) {
     usb_puts("Not Erased! Chip is not write enabled.\n");
     return;
   }
+  //addr align
+  switch (cmd) {
+    case W25_CMD_ERA_SECTOR:
+      what = "sector";
+      addr &= ~(4*1024-1);
+      break;
+    case: W25_CMD_ERA_32K:
+      what = "32K block";
+      addr &= ~(32*1024-1);
+      break;
+    case: W25_CMD_ERA_64K:
+      what = "64K block";
+      addr &= ~(64*1024-1);
+    default:
+      return;
+  }
+  spi_enable(spi);
+  spi_nss_enable();
+  spi_xfer(spi, cmd);
+  spi_xfer(spi, addr>>16);
+  spi_xfer(spi, (addr>>8)&0xFF);
+  spi_xfer(spi, addr&0xFF);
+  spi_nss_disable();
+  spi_disable(spi);
+  usb_printf("%s erased, starting at %06X\n",
+		what,(unsigned)addr);
+}
+
+void flash_status(void) {
+  uint8_t s;
+  s = w25_read_sr1(SPI2);
+  usb_printf("SR1 = %02x (%s)\n", s, s & W25_SR1_WEL ? "write enabled" : "write disabled");
+  usb_printf("SR2 = %02x\n", w25_read_sr2(SPI2));
 }
 
 //PB12-SS PB13-SCK PB14-MISO PB15-MOSI

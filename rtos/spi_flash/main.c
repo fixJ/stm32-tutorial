@@ -20,6 +20,7 @@ static char *cap[4] = {
 static void send_task(void *args __attribute__((unused))) {
     char ch;
     int devx;
+    uint8_t idbuf[8];
     char * devs;
     char * device;
     uint32_t info;
@@ -56,6 +57,14 @@ static void send_task(void *args __attribute__((unused))) {
                   (uint16_t)((info>>8)&0xFF),
                   (uint16_t)(info&0xFF),
                   device);
+              break;
+        case 'U':
+              w25_read_uid(SPI2, idbuf, sizeof(idbuf));
+              usb_printf("Unique ID: $");
+              for (unsigned int i = 0; i < sizeof idbuf; i++) {
+                usb_printf("%02x", idbuf[i]);
+              }
+              usb_puts("\n");
               break;
       }
     }
