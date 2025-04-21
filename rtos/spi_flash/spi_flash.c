@@ -208,11 +208,11 @@ void w25_erase_block(uint32_t spi, uint32_t addr, uint32_t cmd) {
       what = "sector";
       addr &= ~(4*1024-1);
       break;
-    case: W25_CMD_ERA_32K:
+    case W25_CMD_ERA_32K:
       what = "32K block";
       addr &= ~(32*1024-1);
       break;
-    case: W25_CMD_ERA_64K:
+    case W25_CMD_ERA_64K:
       what = "64K block";
       addr &= ~(64*1024-1);
     default:
