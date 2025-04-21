@@ -276,7 +276,7 @@ unsigned int get_data8(const char * prompt) {
     if (prompt) {
       usb_printf("%s", prompt);
     }
-    while ((ch = usb_getc()) != '\r' && ch != '\n' && strchr(",./;\t", ch)) {
+    while ((ch = usb_getc()) != '\r' && ch != '\n' && !strchr(",./;\t", ch)) {
       if (ch == '"' || ch == '\'') {
         usb_putc(ch);
         v = usb_getc();
