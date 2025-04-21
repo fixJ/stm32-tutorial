@@ -263,7 +263,7 @@ unsigned int get_data24(const char * prompt) {
           continue;
         }
       }
-      if (++count > 6) {
+      if (++count >= 6) {
         break;
       }
     }
