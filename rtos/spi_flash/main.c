@@ -103,6 +103,7 @@ static void send_task(void *args __attribute__((unused))) {
                 if (a == 0xffffffff) {
                   break;
                 }
+                usb_printf("%02x", a);
                 addr = a;
                 ++count;
               }

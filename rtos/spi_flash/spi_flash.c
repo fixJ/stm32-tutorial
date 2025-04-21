@@ -309,7 +309,7 @@ unsigned int get_data8(const char * prompt) {
           continue;
         }
       }
-      if (++count > 2) {
+      if (++count >= 2) {
         break;
       }
     }
