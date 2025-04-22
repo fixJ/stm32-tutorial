@@ -6,6 +6,7 @@
 #include "task.h"
 #include "usbcdc.h"
 #include <ctype.h>
+#include <intelhex.h>
 
 static void spi_nss_enable(void) {
   gpio_clear(GPIOB, GPIO12);
@@ -317,6 +318,91 @@ unsigned int get_data8(const char * prompt) {
       return 0xffff;
     }
 	return v & 0xFF;
+}
+
+uint32_t dump_page(uint32_t spi, uint32_t addr) {
+  char buf[17];
+  addr &= 0xff;
+  for (unsigned int i = 0; i < 16; i++, addr+= 16) {
+    usb_printf("%06x:", (unsigned int)addr);
+    w25_read_data(spi, addr, buf, 16);
+    for (uint32_t offset = 0; offset < 16; offset++) {
+      usb_printf(" %02x", buf[offset]);
+    }
+    for (uint32_t offset = 0; offset < 16; offset++) {
+      if (buf[offset] < ' ' || buf[offset] > 0x7f) {
+        usb_putc('.');
+      } else {
+        usb_putc(buf[offset]);
+      }
+    }
+    usb_putc('\n');
+  }
+  return addr;
+}
+
+void load_ihex(uint32_t spi) {
+  s_ihex ihex;
+  char buf[200], ch;
+  unsigned int rtype, count=0, ux;
+  if (w25_is_wprotect(spi)) {
+    usb_printf("flash is write protected\n");
+    return;
+  }
+  ihex_init(&ihex);
+  usb_printf("ready for Intel hex upload:\n");
+  for(;;){
+    usb_printf("%08x ", (unsigned int)ihex.compaddr);
+    while((ch = usb_getc()) != ':') {
+      if (ch == 0x1a || ch == 0x04) {
+        usb_printf("EOF\n");
+        return;
+      }
+    }
+    buf[0] = ch;
+    usb_putc(ch);
+    for (ux=1; ux+1<sizeof(buf); ++ux) {
+      buf[ux] = ch = usb_getc();
+      if (ch == '\r' || ch == '\n') {
+        break;
+      }
+      if (ch == 0x1a || ch == 0x04) {
+        usb_printf("EOF\n");
+        return;
+      }
+      usb_putc(ch);
+    }
+    if (!strchr(buf, ':')) {
+      continue;
+    }
+    rtype = ihex_parse(&ihex, buf);
+    switch (rtype) {
+      case IHEX_RT_DATA:
+        w25_write_data(spi, ihex.addr&0x00ffffff, ihex.data, ihex.length);
+        ihex.compaddr += ihex.length;
+        break;
+      case IHEX_RT_EOF:
+        break;
+      case IHEX_RT_XSEG:
+        break;
+      case IHEX_RT_XLADDR:
+        ihex.compaddr = ihex.baseaddr + ihex.addr;
+        break;
+      case IHEX_RT_SLADDR:
+        break;
+      default:
+        usb_printf("Error %02x: '%s'\n", (unsigned int)rtype, buf);
+        continue;
+    }
+    ++count;
+    if (rtype == IHEX_RT_EOF) {
+      break;
+    }
+    if (strchr(buf, 0x1a)||strchr(buf, 0x04)) {
+      break;
+    }
+
+  }
 }
 
 //PB12-SS PB13-SCK PB14-MISO PB15-MOSI

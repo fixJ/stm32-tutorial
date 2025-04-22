@@ -112,6 +112,10 @@ static void send_task(void *args __attribute__((unused))) {
               w25_chip_erase(SPI2);
               usb_printf("chip erase done\n");
               break;
+        case 'H':
+              load_ihex(SPI2);
+              vTaskDelay(pdMS_TO_TICKS(1500));
+              break;
       }
     }
     for (;;);
