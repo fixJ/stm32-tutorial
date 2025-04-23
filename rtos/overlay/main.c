@@ -27,7 +27,7 @@ typedef struct {
 #define N_REGIONS 1
 #define N_OVLY    2
 
-#define OVERLAY(region, ov, sym) { region, &ov, &__load_start ## sym, &__load_stop ## sym, 0, sym }
+#define OVERLAY(region, ov, sym) { region, &ov, &__load_start_ ## sym, &__load_stop_ ## sym, 0, sym }
 
 extern unsigned long overlay1;
 extern long __load_start_led_on, __load_start_led_off;
