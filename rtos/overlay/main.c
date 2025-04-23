@@ -83,12 +83,6 @@ void led_off_stub(void) {
   return led_offp();
 }
 
-static void led_task(void *args __attribute__((unused))) {
-  for(;;) {
-      gpio_toggle(GPIOE, GPIO5);
-      vTaskDelay(pdMS_TO_TICKS(2000));
-  }
-}
 
 static void led_setup() {
     rcc_periph_clock_enable(RCC_GPIOE);
@@ -120,7 +114,6 @@ int main(void) {
     usb_start();
     led_setup();
     spi_setup();
-    xTaskCreate(led_task, "led", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(control_task, "control", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
     vTaskStartScheduler();
     for(;;);
