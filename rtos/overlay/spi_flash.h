@@ -32,7 +32,7 @@
 uint8_t w25_read_sr1(uint32_t spi);
 uint8_t w25_read_sr2(uint32_t spi);
 void w25_wait(uint32_t spi);
-bool w25_is_wprotected(uint32_t spi);
+bool w25_is_wprotect(uint32_t spi);
 void w25_write_en(uint32_t spi, bool en);
 uint16_t w25_manuf_device(uint32_t spi);
 uint32_t w25_JEDEC_ID(uint32_t spi);
