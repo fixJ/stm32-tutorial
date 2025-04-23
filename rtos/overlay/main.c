@@ -32,7 +32,7 @@ typedef struct {
 
 extern unsigned long overlay1;
 extern char LOADREF(led_on), LOADREF(led_off);
-
+extern long __load_start_led_on, __load_start_led_off;
 
 static s_overlay overlays[N_OVLY] = {
   OVERLAY(0, overlay1, led_on),
