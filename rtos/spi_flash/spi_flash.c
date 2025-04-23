@@ -341,7 +341,7 @@ uint32_t dump_page(uint32_t spi, uint32_t addr) {
   return addr;
 }
 
-void load_ihex(uint32_t spi) {
+/*void load_ihex(uint32_t spi) {
   s_ihex ihex;
   char buf[200], ch;
   unsigned int rtype, count=0, ux;
@@ -403,6 +403,80 @@ void load_ihex(uint32_t spi) {
       break;
     }
 
+  }
+}
+ */
+
+void
+load_ihex(uint32_t spi) {
+  s_ihex ihex;
+  char buf[200], ch;
+  unsigned rtype, count = 0, ux;
+
+  if ( w25_is_wprotect(spi) ) {
+    usb_printf("Flash is write protected.\n");
+    return;
+  }
+
+  ihex_init(&ihex);
+  usb_printf("\nReady for Intel Hex upload:\n");
+
+  for (;;) {
+    usb_printf("%08X ",(unsigned)ihex.compaddr);
+
+    while ( (ch = usb_getc()) != ':' ) {
+      if ( ch == 0x1A || ch == 0x04 ) {
+        usb_printf("EOF\n");
+        return;		// ^Z or ^D ends transmission
+      }
+    }
+    buf[0] = ch;
+    usb_putc(ch);
+
+    for (  ux=1; ux+1<sizeof buf; ++ux ) {
+      buf[ux] = ch = usb_getc();
+      if ( ch == '\r' || ch == '\n' )
+        break;
+      if ( ch == 0x1A || ch == 0x04 ) {
+        usb_printf("(EOF)\n");
+        return;		// ^Z or ^D ends transmission
+      }
+      usb_putc(ch);
+    }
+    buf[ux] = 0;
+    usb_putc('\n');
+
+    if ( !strchr(buf,':') ) {
+      // Skip line with no hex
+      continue;
+    }
+
+    rtype = ihex_parse(&ihex,buf);
+
+    switch ( rtype ) {
+      case IHEX_RT_DATA:	// data record
+        w25_write_data(spi,ihex.addr&0x00FFFFFF,ihex.data,ihex.length);
+      ihex.compaddr += ihex.length;
+      break;
+      case IHEX_RT_EOF:	// end	// of-file record
+        break;
+      case IHEX_RT_XSEG:	// extended segment address record
+        break;
+      case IHEX_RT_XLADDR:	// extended linear address record
+        ihex.compaddr = ihex.baseaddr + ihex.addr;
+      break;
+      case IHEX_RT_SLADDR:	// start linear address record (MDK-ARM)
+        break;
+      default:
+        usb_printf("Error %02X: '%s'\n",(unsigned)rtype,buf);
+      continue;
+    }
+    ++count;
+
+    if ( rtype == IHEX_RT_EOF )
+      break;
+    if ( strchr(buf,0x1A) || strchr(buf,0x04) )
+      break;			// EOF from ascii-xfr
   }
 }
 
