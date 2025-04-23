@@ -8,7 +8,14 @@ CLOBBER += *.ov
 TGT_CFLAGS	    += -I./rtos -I.
 TGT_CXXFLAGS	+= -I./rtos -I.
 
-all: elf bin
+main.elf: $(OBJS)
+	$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o main.elf
+    @rm -f *.ov all.hex
+    for v in led_on led_off ; do \
+    		$(OBJCOPY) -O ihex -j.$$v main.elf $$v.ov ; \
+    		cat $$v.ov | sed '/^:04000005/d;/^:00000001/d' >>all.hex ; \
+    done
+    $(OBJCOPY) -Obinary -R.led_on -R.led_off main.elf main.bin
 
 include ../../Makefile.incl
 
