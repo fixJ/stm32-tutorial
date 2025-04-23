@@ -97,6 +97,24 @@ static void led_setup() {
               GPIO_CNF_OUTPUT_PUSHPULL,GPIO5);
 }
 
+static void control_task(void *args __attribute__((unused))) {
+  char ch;
+  ch = usb_getc();
+  switch (ch) {
+    case '1':
+      led_on_stub();
+      usb_printf("LED ON\n");
+      break;
+    case '0':
+      led_off_stub();
+      usb_printf("LED OFF\n");
+      break;
+    default:
+      usb_printf("error command\n");
+      break;
+  }
+}
+
 
 int main(void) {
     rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]);
