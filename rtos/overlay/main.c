@@ -122,6 +122,7 @@ int main(void) {
     led_setup();
     spi_setup();
     xTaskCreate(led_task, "led", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(control_task, "control", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, NULL);
     vTaskStartScheduler();
     for(;;);
     return 0;
