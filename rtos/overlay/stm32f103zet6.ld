@@ -86,7 +86,7 @@ SECTIONS
         .led_off {
             *(.ov_led_off)
         }
-	} >ovl AT > xflash
+	} >ovl AT > rom
 
 	PROVIDE (overlay1 = .overlay1_start);
 

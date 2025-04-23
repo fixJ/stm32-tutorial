@@ -58,7 +58,7 @@ static void * module_lookup(void * module) {
       ovl->size = (char *)ovl->stop - (char *)ovl->start;
     }
     cur_overlay[regionx] = ovl;
-    w25_read_data(SPI2, (uintptr_t)ovl->start, (unsigned int *)ovl->vma, (unsigned)ovl->size);
+    memcpy(ovl->vma, ovl->start, ovl->size);
   }
   return ovl->func;
 }
