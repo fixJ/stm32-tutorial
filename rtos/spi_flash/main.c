@@ -118,7 +118,6 @@ static void send_task(void *args __attribute__((unused))) {
               break;
       }
     }
-    for (;;);
 }
 
 static void led_task(void *args __attribute__((unused))) {

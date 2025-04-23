@@ -372,6 +372,7 @@ void load_ihex(uint32_t spi) {
       }
       usb_putc(ch);
     }
+    buf[ux]=0;
     if (!strchr(buf, ':')) {
       continue;
     }
