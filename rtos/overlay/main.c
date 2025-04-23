@@ -28,9 +28,10 @@ typedef struct {
 #define N_OVLY    2
 
 #define OVERLAY(region, ov, sym) { region, &ov, &__load_start_ ## sym, &__load_stop_ ## sym, 0, sym }
+#define LOADREF(sym) __load_start_ ## sym, __load_stop_ ## sym
 
 extern unsigned long overlay1;
-extern long __load_start_led_on, __load_start_led_off;
+extern char LOADREF(led_on), LOADREF(led_off);
 
 static s_overlay overlays[N_OVLY] = {
   OVERLAY(0, overlay1, led_on),
