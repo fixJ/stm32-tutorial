@@ -93,18 +93,20 @@ static void led_setup() {
 static void control_task(void *args __attribute__((unused))) {
   char ch;
   ch = usb_getc();
-  switch (ch) {
-    case '1':
-      led_on_stub();
+  for(;;) {
+    switch (ch) {
+      case '1':
+        led_on_stub();
       usb_printf("LED ON\n");
       break;
-    case '0':
-      led_off_stub();
+      case '0':
+        led_off_stub();
       usb_printf("LED OFF\n");
       break;
-    default:
-      usb_printf("error command\n");
+      default:
+        usb_printf("error command\n");
       break;
+    }
   }
 }
 
