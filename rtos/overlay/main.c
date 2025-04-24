@@ -92,8 +92,8 @@ static void led_setup() {
 
 static void control_task(void *args __attribute__((unused))) {
   char ch;
-  ch = usb_getc();
   for(;;) {
+    ch = usb_getc();
     switch (ch) {
       case '1':
         led_on_stub();
