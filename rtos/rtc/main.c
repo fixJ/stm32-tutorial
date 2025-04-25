@@ -119,8 +119,8 @@ static void rtc_setup(void) {
   rtc_interrupt_disable(RTC_OW);
 
   rtc_awake_from_off(RCC_HSE);
-  rtc_set_prescaler(62500);
-  rtc_set_counter_value(0xfffffff0);
+  rtc_set_prescaler_val(62500);
+  rtc_set_counter_val(0xfffffff0);
 
   nvic_enable_irq(NVIC_RTC_IRQ);
 

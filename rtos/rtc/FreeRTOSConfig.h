@@ -12,3 +12,5 @@
 #define INCLUDE_vTaskDelay      1
 #define configTOTAL_HEAP_SIZE		( ( size_t ) ( 17 * 1024 ) )
 #define configIDLE_SHOULD_YIELD 1
+#define configSUPPORT_DYNAMIC_ALLOCATION    1
+#define configUSE_MUTEXES    1
