@@ -140,6 +140,8 @@ int main(void) {
     rcc_clock_setup_pll(&rcc_hse_configs[RCC_CLOCK_HSE8_72MHZ]);
     h_mutex = xSemaphoreCreateMutex();
     usb_start();
+    rtc_setup();
+    set_alarm(5u);
     xTaskCreate(overflow_task1, "task1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, &task1_handle);
     xTaskCreate(sec_task2, "task2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, &task2_handle);
     xTaskCreate(alarm_task3, "task3", configMINIMAL_STACK_SIZE, NULL, 1, &task3_handle);
