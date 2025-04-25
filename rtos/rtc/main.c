@@ -76,10 +76,10 @@ void rtc_isr(void) {
   }
 }
 
-static void set_alarm(unsigned int seconds) {
-  alarm = (rtc_get_counter_val() + seconds) & 0xffffffff;
+static void set_alarm(unsigned int sec) {
+  alarm = (rtc_get_counter_val() + sec) & 0xffffffff;
   rtc_disable_alarm();
-  rtc_set_alarm_time(rtc_get_counter_val() + seconds);
+  rtc_set_alarm_time(rtc_get_counter_val() + sec);
   rtc_enable_alarm();
 }
 
@@ -119,7 +119,7 @@ static void rtc_setup(void) {
   rtc_interrupt_disable(RTC_OW);
 
   rtc_awake_from_off(RCC_HSE);
-  rtc_set_prescaler_val(62500);
+  rtc_set_prescale_val(62500);
   rtc_set_counter_val(0xfffffff0);
 
   nvic_enable_irq(NVIC_RTC_IRQ);
@@ -141,8 +141,8 @@ int main(void) {
     h_mutex = xSemaphoreCreateMutex();
     usb_start();
     xTaskCreate(overflow_task1, "task1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, &task1_handle);
-    xTaskCreate(sec_task2, "task2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, &xTaskHandle);
-    xTaskCreate(alarm_task3, "task3", configMINIMAL_STACK_SIZE, NULL, 1, &xTaskHandle);
+    xTaskCreate(sec_task2, "task2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, &task2_handle);
+    xTaskCreate(alarm_task3, "task3", configMINIMAL_STACK_SIZE, NULL, 1, &task3_handle);
     vTaskStartScheduler();
     for(;;);
     return 0;
