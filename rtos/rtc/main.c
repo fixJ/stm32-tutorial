@@ -144,7 +144,7 @@ int main(void) {
     set_alarm(5u);
     xTaskCreate(overflow_task1, "task1", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, &task1_handle);
     xTaskCreate(sec_task2, "task2", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, &task2_handle);
-    xTaskCreate(alarm_task3, "task3", configMINIMAL_STACK_SIZE, NULL, 1, &task3_handle);
+    xTaskCreate(alarm_task3, "task3", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES-1, &task3_handle);
     vTaskStartScheduler();
     for(;;);
     return 0;
