@@ -1,6 +1,7 @@
 #include "i2c.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include <libopencm3/stm32/rcc.h>
 
 #define systicks    xTaskGetTickCount
 
@@ -39,7 +40,7 @@ void i2c_configure(I2C_Control *dev, uint32_t i2c, uint32_t ticks) {
   rcc_periph_reset_pulse(RST_I2C1);
   I2C_CR1(dev->device) &= ~I2C_CR1_STOP;
   i2c_set_standard_mode(dev->device);
-  i2c_set_clock_frequency(dev->device, I2C_CR2_FREQ_36MHZ);
+  i2c_set_clock_frequency(dev->device, 36);
   i2c_set_trise(dev->device, 36);
   i2c_set_dutycycle(dev->device, I2C_CCR_DUTY_DIV2);
   i2c_set_ccr(dev->device, 180);
