@@ -24,7 +24,7 @@ static inline TickType_t diff_ticks(TickType_t early, TickType_t later) {
 
 
 const char * i2c_error(I2C_Status status) {
-  int icode = int(status);
+  int icode = (int)status;
   if (icode < 0 || icode > I2C_Read_Timeout) {
     return "Bad I2C status";
   }
@@ -36,7 +36,7 @@ void i2c_configure(I2C_Control *dev, uint32_t i2c, uint32_t ticks) {
   dev->timeout = ticks;
 
   i2c_peripheral_disable(dev->device);
-  i2c_reset(dev->device);
+  rcc_periph_reset_pulse(RST_I2C1);(dev->device);
   I2C_CR1(dev->device) &= ~I2C_CR1_STOP;
   i2c_set_standard_mode(dev->device);
   i2c_set_clock_frequency(dev->device, I2C_CR2_FREQ_36MHZ);
