@@ -1,4 +1,5 @@
 #include "i2c.h"
+#include "oled.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include <libopencm3/stm32/rcc.h>
@@ -44,7 +45,7 @@ void i2c_configure(I2C_Control *dev, uint32_t i2c, uint32_t ticks) {
   i2c_set_trise(dev->device, 36);
   i2c_set_dutycycle(dev->device, I2C_CCR_DUTY_DIV2);
   i2c_set_ccr(dev->device, 180);
-  i2c_set_own_7bit_slave_address(dev->device,0x23);
+  //i2c_set_own_7bit_slave_address(dev->device,OLED_ADDRESS);
   i2c_peripheral_enable(dev->device);
 }
 

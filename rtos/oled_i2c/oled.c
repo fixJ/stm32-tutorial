@@ -1,6 +1,7 @@
 #include "oled.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "i2c.h"
 #include <libopencm3/stm32/gpio.h>
 
 /*
@@ -16,12 +17,14 @@
  * */
 
 void oled_write_command(I2C_Control *dev, uint8_t command) {
+  i2c_start_addr(dev, OLED_ADDRESS, Write);
   i2c_write(dev, OLED_WRITE_CMD);
   i2c_write(dev, command);
   i2c_stop(dev);
 }
 
 void oled_write_command2(I2C_Control *dev, uint8_t cmd1, uint8_t cmd2) {
+  i2c_start_addr(dev, OLED_ADDRESS, Write);
   i2c_write(dev, OLED_WRITE_CMD);
   i2c_write(dev, cmd1);
   i2c_write(dev, cmd2);
@@ -29,6 +32,7 @@ void oled_write_command2(I2C_Control *dev, uint8_t cmd1, uint8_t cmd2) {
 }
 
 void oled_write_data(I2C_Control *dev, uint8_t data) {
+  i2c_start_addr(dev, OLED_ADDRESS, Write);
   i2c_write(dev, OLED_WRITE_DATA);
   i2c_write(dev, data);
   i2c_stop(dev);
