@@ -88,6 +88,7 @@ int main(void) {
     rcc_periph_clock_enable(RCC_GPIOA);
     rcc_periph_clock_enable(RCC_GPIOB);
     rcc_periph_clock_enable(RCC_I2C1);
+    rcc_periph_clock_enable(RCC_AFIO);
     gpio_set_mode(GPIOA,GPIO_MODE_OUTPUT_2_MHZ,
               GPIO_CNF_OUTPUT_PUSHPULL,GPIO5);
     gpio_set_mode(GPIOB,GPIO_MODE_OUTPUT_2_MHZ,
