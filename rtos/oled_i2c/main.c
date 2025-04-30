@@ -97,7 +97,7 @@ int main(void) {
     i2c_configure(&i2c_device, I2C1, 1000);
     oled_init(&i2c_device);
 
-    i2c_start_addr(dev, OLED_ADDRESS, Write);
+    i2c_start_addr(&i2c_device, OLED_ADDRESS, Write);
     oled_write_command2(&i2c_device, 0x20,0x02);// Page mode
     oled_write_command(&i2c_device, 0x40);
     oled_write_command2(&i2c_device, 0xD3,0x00);
@@ -108,7 +108,7 @@ int main(void) {
         for ( unsigned bx=0; bx<128; ++bx )
             oled_write_data(&i2c_device, BMP1[px*128+bx]);
     }
-    i2c_stop(dev);
+    i2c_stop(&i2c_device);
     for(;;);
     return 0;
 }
