@@ -35,7 +35,7 @@ int main(void) {
         oled_write_command(&i2c_device, 0x00); // Lo col
         oled_write_command(&i2c_device, 0x10); // Hi col
         for ( unsigned bx=0; bx<128; ++bx )
-            oled_write_data(BMP1[px*128+bx]);
+            oled_write_data(&i2c_device, BMP1[px*128+bx]);
     }
 
     for(;;);
