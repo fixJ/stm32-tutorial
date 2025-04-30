@@ -116,6 +116,8 @@ uint8_t i2c_read(I2C_Control *dev, bool lastf) {
 
 void i2c_write_restart(I2C_Control *dev, uint8_t byte, uint8_t addr) {
   TickType_t t0 = systicks();
+  i2c_send_data(dev->device, byte);
+  i2c_send_start(dev->device);
   taskENTER_CRITICAL();
   while(!(I2C_SR1(dev->device) & I2C_SR1_BTF)) {
     if (diff_ticks(t0, systicks()) > dev->timeout) {
