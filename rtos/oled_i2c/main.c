@@ -1,6 +1,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "oled.h"
+#include "usbcdc.h"
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
@@ -96,7 +97,7 @@ int main(void) {
     gpio_set(GPIOB,GPIO6|GPIO7);
     i2c_configure(&i2c_device, I2C1, 1000);
     oled_init(&i2c_device);
-
+    usb_printf("oled init\n");
 
     oled_write_command2(&i2c_device, 0x20,0x02);// Page mode
     oled_write_command(&i2c_device, 0x40);
