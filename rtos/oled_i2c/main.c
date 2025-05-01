@@ -96,6 +96,7 @@ int main(void) {
               GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,GPIO6|GPIO7);
     gpio_set(GPIOB,GPIO6|GPIO7);
     usb_start();
+    vTaskStartScheduler();
     i2c_configure(&i2c_device, I2C1, 1000);
     oled_init(&i2c_device);
     usb_printf("oled init\n");
@@ -115,7 +116,7 @@ int main(void) {
         }
         i2c_stop(&i2c_device);
     }
-    vTaskStartScheduler();
+
     for(;;);
     return 0;
 }
