@@ -115,7 +115,7 @@ int main(void) {
         }
         i2c_stop(&i2c_device);
     }
-
+    vTaskStartScheduler();
     for(;;);
     return 0;
 }
