@@ -96,27 +96,25 @@ int main(void) {
               GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,GPIO6|GPIO7);
     gpio_set(GPIOB,GPIO6|GPIO7);
     usb_start();
-    vTaskStartScheduler();
     i2c_configure(&i2c_device, I2C1, 1000);
     oled_init(&i2c_device);
-    usb_printf("oled init\n");
 
     oled_write_command2(&i2c_device, 0x20,0x02);// Page mode
     oled_write_command(&i2c_device, 0x40);
     oled_write_command2(&i2c_device, 0xD3,0x00);
 
 
-    for ( uint8_t px=0; px<8; ++px ) {
-        oled_write_command(&i2c_device, 0xB0|px);
-        oled_write_command(&i2c_device, 0x00); // Lo col
-        oled_write_command(&i2c_device, 0x10); // Hi col
-
-        for ( unsigned bx=0; bx<128; ++bx ) {
-            oled_write_data(&i2c_device, BMP1[px*128+bx]);
-        }
-        i2c_stop(&i2c_device);
-    }
-
+//    for ( uint8_t px=0; px<8; ++px ) {
+//        oled_write_command(&i2c_device, 0xB0|px);
+//        oled_write_command(&i2c_device, 0x00); // Lo col
+//        oled_write_command(&i2c_device, 0x10); // Hi col
+//
+//        for ( unsigned bx=0; bx<128; ++bx ) {
+//            oled_write_data(&i2c_device, BMP1[px*128+bx]);
+//        }
+//        i2c_stop(&i2c_device);
+//    }
+    vTaskStartScheduler();
     for(;;);
     return 0;
 }
