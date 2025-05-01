@@ -80,7 +80,25 @@ unsigned char BMP1[] =
 static I2C_Control i2c_device;
 
 static void task(void * args __attribute__((unused))) {
+    i2c_configure(&i2c_device, I2C1, 1000);
+    oled_init(&i2c_device);
 
+    oled_write_command2(&i2c_device, 0x20,0x02);// Page mode
+    oled_write_command(&i2c_device, 0x40);
+    oled_write_command2(&i2c_device, 0xD3,0x00);
+
+
+    for ( uint8_t px=0; px<8; ++px ) {
+        oled_write_command(&i2c_device, 0xB0|px);
+        oled_write_command(&i2c_device, 0x00); // Lo col
+        oled_write_command(&i2c_device, 0x10); // Hi col
+
+        for ( unsigned bx=0; bx<128; ++bx ) {
+            oled_write_data(&i2c_device, BMP1[px*128+bx]);
+        }
+        i2c_stop(&i2c_device);
+    }
+    for(;;);
 }
 
 
@@ -96,24 +114,7 @@ int main(void) {
               GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,GPIO6|GPIO7);
     gpio_set(GPIOB,GPIO6|GPIO7);
     usb_start();
-    i2c_configure(&i2c_device, I2C1, 1000);
-    oled_init(&i2c_device);
-
-//    oled_write_command2(&i2c_device, 0x20,0x02);// Page mode
-//    oled_write_command(&i2c_device, 0x40);
-//    oled_write_command2(&i2c_device, 0xD3,0x00);
-
-
-//    for ( uint8_t px=0; px<8; ++px ) {
-//        oled_write_command(&i2c_device, 0xB0|px);
-//        oled_write_command(&i2c_device, 0x00); // Lo col
-//        oled_write_command(&i2c_device, 0x10); // Hi col
-//
-//        for ( unsigned bx=0; bx<128; ++bx ) {
-//            oled_write_data(&i2c_device, BMP1[px*128+bx]);
-//        }
-//        i2c_stop(&i2c_device);
-//    }
+    xTaskCreate(task,"task",200, NULL, configMAX_PRIORITIES-1, NULL);
     vTaskStartScheduler();
     for(;;);
     return 0;
