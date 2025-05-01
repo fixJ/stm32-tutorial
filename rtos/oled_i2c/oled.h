@@ -2,7 +2,7 @@
 #define OLED_H
 #include <stdint.h>
 #include "i2c.h"
-#define OLED_ADDRESS 0x78
+#define OLED_ADDRESS 0x3C
 #define OLED_WRITE_CMD 0x00
 #define OLED_WRITE_DATA 0x40
 void oled_write_command(I2C_Control *dev, uint8_t command);
