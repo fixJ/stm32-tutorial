@@ -99,9 +99,9 @@ int main(void) {
     i2c_configure(&i2c_device, I2C1, 1000);
     oled_init(&i2c_device);
 
-    oled_write_command2(&i2c_device, 0x20,0x02);// Page mode
-    oled_write_command(&i2c_device, 0x40);
-    oled_write_command2(&i2c_device, 0xD3,0x00);
+//    oled_write_command2(&i2c_device, 0x20,0x02);// Page mode
+//    oled_write_command(&i2c_device, 0x40);
+//    oled_write_command2(&i2c_device, 0xD3,0x00);
 
 
 //    for ( uint8_t px=0; px<8; ++px ) {
