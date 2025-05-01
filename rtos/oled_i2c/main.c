@@ -95,6 +95,7 @@ int main(void) {
     gpio_set_mode(GPIOB,GPIO_MODE_OUTPUT_2_MHZ,
               GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,GPIO6|GPIO7);
     gpio_set(GPIOB,GPIO6|GPIO7);
+    usb_start();
     i2c_configure(&i2c_device, I2C1, 1000);
     oled_init(&i2c_device);
     usb_printf("oled init\n");
