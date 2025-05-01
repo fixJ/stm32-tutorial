@@ -80,7 +80,7 @@ unsigned char BMP1[] =
 static I2C_Control i2c_device;
 
 static void task(void * args __attribute__((unused))) {
-    i2c_configure(&i2c_device, I2C1, 1000);
+    i2c_configure(&i2c_device, I2C1, 1000000);
     oled_init(&i2c_device);
 
     oled_write_command2(&i2c_device, 0x20,0x02);// Page mode
