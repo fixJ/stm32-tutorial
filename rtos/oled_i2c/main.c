@@ -98,7 +98,9 @@ static void task(void * args __attribute__((unused))) {
         }
         i2c_stop(&i2c_device);
     }
-    for(;;);
+    for(;;) {
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    }
 }
 
 
