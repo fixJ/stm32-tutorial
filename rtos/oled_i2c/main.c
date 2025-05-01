@@ -115,6 +115,7 @@ int main(void) {
     gpio_set_mode(GPIOB,GPIO_MODE_OUTPUT_2_MHZ,
               GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN,GPIO6|GPIO7);
     gpio_set(GPIOB,GPIO6|GPIO7);
+    gpio_set(GPIOA,GPIO5);
     usb_start();
     xTaskCreate(task,"task",200, NULL, configMAX_PRIORITIES-1, NULL);
     vTaskStartScheduler();
