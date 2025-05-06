@@ -81,7 +81,7 @@ static I2C_Control i2c_device;
 
 static void task(void * args __attribute__((unused))) {
     i2c_configure(&i2c_device, I2C1, 10000);
-    oled_init(&i2c_device);
+    //oled_init(&i2c_device);
     oled_write_command(&i2c_device, 0xa5);
     for(;;) {
       vTaskDelay(pdMS_TO_TICKS(1000));
