@@ -45,8 +45,8 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
-#include "ssd1306_libopencm3/ssd1306.h"
-#include "ssd1306_libopencm3/ssd1306_fonts.h"
+#include "ssd1306.h"
+#include "ssd1306_fonts.h"
 
 
 
