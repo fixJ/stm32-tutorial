@@ -14,6 +14,7 @@ typedef enum {
 
 enum I2C_RW {
   Read = 1,
+
   Write = 0
 };
 
