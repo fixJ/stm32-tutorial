@@ -110,9 +110,9 @@ void systick_setup(void) {
 }
 
 // interruption SysTick handler
-void sys_tick_handler(void) {
-    systick_counter++;
-}
+//void sys_tick_handler(void) {
+//    systick_counter++;
+//}
 
 // delay main func
 void delay_ms(uint32_t ms) {
